@@ -1,11 +1,22 @@
 'use client'
-
+import { useCart } from "../context/cart"
+import { toast } from "react-toastify"
 
 export default function CartItem({product}) {
-    return(
-        <>
+  const cart = useCart()
+
+  const removeItemFromCart = () => {
+    let res = confirm(`Are you sure you want to remove this? "${product.title}"`)
+    if (res) {
+        cart.removeFromCart(product)
+        toast.info('Removed from cart', { autoClose: 3000 })
+    }
+  }
+
+  return (
+    <>
         <div className="relative flex justify-start my-2 border w-full p-6">
-            <img src='https://placehold.jp/30/dd6699/ffffff/150x150png?text=Here+Image' className="rounded-md w-[150px] h-[150px]" />
+            <img src={product?.url+'/150'} className="rounded-md w-[150px] h-[150px]" />
 
             <div className="overflow-hidden pl-2 w-full">
                 <div className="flex items-center justify-between w-full">
@@ -13,7 +24,7 @@ export default function CartItem({product}) {
                         {product?.title}
                     </div>
                     <div className="font-bold text-lg">
-                        £{(product?.price / 100 ).toFixed(2)}
+                        £{(product?.price / 100).toFixed(2)}
                     </div>
                 </div>
 
@@ -26,13 +37,12 @@ export default function CartItem({product}) {
                 </div>
 
                 <div className="absolute right-0 bottom-0 p-4 text-sm">
-                    <button className="underline text-blue-500">
+                    <button onClick={() => removeItemFromCart()} className="underline text-blue-500">
                         Remove
-                    </button>   
+                    </button>
                 </div>
             </div>
         </div>
-        </>
-    )
+    </>
+  )
 }
-
